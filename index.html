@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="stylesheet" type='text/css' href="style/style.css">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.2/css/bulma.css">
+
+	<title>JQuery branch</title>
+</head>
+
+<body>
+	<div class='section'>
+		<div class='container'>
+			<h3 class='title is-5'>Rails API: JQuery front end with Bulma styling</h3>
+			<div class='columns'>
+				<div class='column is-4'>
+					<tag id="tracks" class="api-links tag is-info">tracks</tag>
+					<tag id="resources" class="api-links tag is-info">resources</tag>
+					<tag id="categories" class="api-links tag is-info">categories</tag>
+					<tag id="activities" class="api-links tag is-info">activities</tag>
+				</div>
+			</div>
+		</div>
+
+		<div class='container'>
+			<div class='columns'>
+				<div class='column'>
+					<tag id="new-track" class="tag api-new-links is-primary">new-track</tag>
+					<tag id="new-resource" class="tag api-new-links is-primary">new-resource</tag>
+					<tag id="new-category" class="tag api-new-links is-primary">new-category</tag>
+					<tag id="new-activity" class="tag api-new-links is-primary">new-activity</tag>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<div id="new-form-div">... new form ...</div>
+		<div id="api-data-div">... api data ...</div>
+	</div>
+
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	 crossorigin="anonymous"></script>
+
+	<script src="src/activity.js"></script>
+	<script src="src/category.js"></script>
+	<script src="src/track.js"></script>
+	<script src="src/resource.js"></script>
+	<script src="src/index.js"></script>
+</body>
+
+</html>
