@@ -6,7 +6,7 @@ $(() => {
 	clearApiDataDiv()
 })
 
-const baseUrl = 'https://learntek.herokuapp.com/api/'
+const baseUrl = 'https://learntek-api.herokuapp.com/api/'
 // const baseUrl = 'http://localhost:3000/api/'
 
 
