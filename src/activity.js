@@ -1,59 +1,8 @@
-// console.log('activity.js loaded ---')
 class Activity {
 	constructor(obj) {
 		this.name = obj.name
 		this.description = obj.description
 		this.status = obj.status
-	}
-
-	static activityForm() {
-		let activityForm = (`
-		<form id='new-activity-form'>
-			<label class='subtitle'>New Activity</label>
-		
-			<!-- name -->
-			<div class="field">
-				<div class="control has-icons-left has-icons-right">
-					<input class="input is-info" type="text" placeholder="name">
-				</div>
-			</div>
-		
-			<!-- description -->
-			<div class="field">
-				<div class="control has-icons-left has-icons-right">
-					<input class="input is-info" type="text" placeholder="description">
-				</div>
-			</div>
-		
-			<!-- status -->
-			<div class="field">
-				<div class="control">
-					<div class="select is-info">
-						<select>
-							<option>status</option>
-							<option class="dropdown-item" value="new">new</option>
-							<option class="dropdown-item" value="started">started</option>
-							<option class="dropdown-item" value="progressing">progressing</option>
-							<option class="dropdown-item" value="complete">complete</option>
-						</select>
-					</div>
-				</div>
-			</div>
-		
-			<!-- Submit -->
-			<div class="field is-grouped">
-				<div class="control is-info">
-					<button class="input is-primary">Submit</button>
-				</div>
-				<!-- Cancel -->
-				<div class="control">
-					<button class="input is-text is-danger">Cancel</button>
-				</div>
-			</div>
-		</form>
-		`)
-		document.getElementById('new-form-div').innerHTML = activityForm
-		createActivity()
 	}
 }
 
@@ -70,18 +19,34 @@ Activity.prototype.activityHTML = function () {
 }
 
 function newActivityForm() {
-	clearApiDataDiv()
-	spinnerNewFormDiv('activity')
 
-	let form = Activity.activityForm()
-	$('#new-form-div').html(form)
+	let activityForm = (`
+		<fieldset>
+			<strong>New Activity</strong>
+			<form id='new-activity-form'>
+				<input id='name' placeholder='activity name' /><br>
+				<input id='description' placeholder='description'/><br>
+
+				<select id='statusSelect' placeholder='status'>
+					<option>choose status</option>
+					<option value='new'>new</option>
+					<option value='started'>started</option>
+					<option value='progressing'>progressing</option>
+					<option value='complete'>complete</option>
+				</select><br>
+
+				<button type='submit'>Submit Activity</button>
+			</form>
+		</fieldset>
+		`)
+	document.getElementById('new-form-div').innerHTML = activityForm
 	createActivity()
 }
 
 function createActivity() {
-	$('form#new-activity-form').on('submit', function (event) {
+	let form = document.querySelector('form#new-activity-form')
+	form.addEventListener('submit', function (event) {
 		event.preventDefault()
-
 		let name = event.target[0].value
 		let description = event.target[1].value
 		let status = event.target[2].value
@@ -92,15 +57,48 @@ function createActivity() {
 			status: status
 		}
 
-		fetch(`${baseUrl}activities`, {
-			method: 'post',
+		let myRequest = new Request(baseUrl + 'activities')
+		// let myInit = {
+		// 	method: 'POST',
+		// 	body: JSON.stringify(activity),
+		// 	headers: {
+		// 		'Accept': 'application/json, text/plain, */*',
+		// 		'Content-Type': 'application/json'
+		// 	},
+		// 	mode: 'cors',
+		// 	cache: 'default'
+		// }
+		// console.log("myInit: ", myInit);
+
+		console.log("myRequest: ", myRequest);
+
+		// fetch(myRequest, myInit)
+		// works the same 
+
+		fetch(myRequest, {
+			method: 'POST',
+			body: JSON.stringify(activity),
 			headers: {
 				'Accept': 'application/json, text/plain, */*',
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(activity)
-		}).then(() => {
-			clearNewFormDiv()
-		});
+			mode: 'cors',
+			cache: 'default'
+		}).then(res => res.json()
+			.then(data => {
+				console.log("data: ", data);
+				document.getElementById('new-form-div').innerHTML = data;
+			})
+		)
 	})
 }
+
+
+// fetch('http://localhost:3000/api/activities', {
+// 			method: 'post',
+// 			headers: {
+// 				'Accept': 'application/json, text/plain, */*',
+// 				'Content-Type': 'application/json'
+// 			},
+// 			body: JSON.stringify(activity)
+// 		})

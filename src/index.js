@@ -1,103 +1,91 @@
-$(() => {
-	// console.log('index.js loaded ---');
-	listenToDataLinks()
-	listenForNewFormLinks()
-	clearNewFormDiv()
-	clearApiDataDiv()
-})
+// const baseUrl = 'https://learntek.herokuapp.com/api/'
+const baseUrl = 'http://127.0.0.1:3000/api/'
 
-const baseUrl = 'https://learntek-api.herokuapp.com/api/'
-// const baseUrl = 'http://localhost:3000/api/'
+const dataDiv = document.getElementById('api-data')
 
+clearDataDiv()
+listenToDataLinks()
+listenToNewFormLinks()
 
-function clearNewFormDiv() {
-	$('div#new-form-div').html('')
-}
-
-function spinnerNewFormDiv(path) {
-	$('div#new-form-div').html(`
-		<p>
-			<i class="fa fa-spinner fa-spin" style="font-size:24px"></i> 
-			fetching <strong>new ${path} form</strong>
-		</p>
-	`)
-}
-
-function clearApiDataDiv() {
-	$('div#api-data-div').html('')
-}
-
-function spinnerApiDataDiv(url) {
-	$('div#api-data-div').html(`
-		<p>
-			<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>
-			fetching <strong>${url}</strong> API data
-		</p>
-	`)
+function clearDataDiv() {
+	dataDiv.innerHTML = ''
 }
 
 function listenToDataLinks() {
-	$('tag.api-links').on('click', getApiData)
+	let apiLinks = document.querySelectorAll('a.api-links')
+	apiLinks.forEach(link => {
+		link.addEventListener('click', getApiData)
+	})
 }
 
 function getApiData(event) {
 	event.preventDefault()
-	clearNewFormDiv()
 	let url = this.id
-	let dataDiv = $('div#api-data-div')
-	spinnerApiDataDiv(url)
+	let dataDiv = document.getElementById('api-data')
 
-	setTimeout(() => {
-		$.ajax({
-			url: baseUrl + url,
-			method: 'get',
-			dataType: 'json'
-		}).done(function (data) {
-			clearApiDataDiv()
-			switch (url) {
-				case 'tracks':
-					data.forEach(item => {
-						let newTrack = new Track(item)
-						dataDiv.append(newTrack.trackHTML())
-					})
-					break;
+	dataDiv.innerHTML = '...loading...'
+	let apiDataHtml = ''
 
-				case 'resources':
-					data.forEach(item => {
-						let newResource = new Resource(item)
-						dataDiv.append(newResource.resourceHTML())
-					})
-					break;
+	fetch(baseUrl + url)
+		.then(res => res.json()
+			.then(data => {
+				switch (url) {
 
-				case 'activities':
-					data.forEach(item => {
-						let newActivity = new Activity(item)
-						dataDiv.append(newActivity.activityHTML())
-					})
-					break;
+					case 'tracks':
+						data.forEach(item => {
+							let newTrack = new Track(item)
+							document.getElementById('new-form-div').innerHTML = ''
+							apiDataHtml += newTrack.trackHTML()
+						})
+						dataDiv.innerHTML = apiDataHtml
+						break;
 
-				case 'categories':
-					data.forEach(item => {
-						let newCategory = new Category(item)
-						dataDiv.append(newCategory.categoryHTML())
-					})
-					listenCategoryResources()
-					break;
+					case 'resources':
+						data.forEach(item => {
+							let newResource = new Resource(item)
+							document.getElementById('new-form-div').innerHTML = ''
+							apiDataHtml += newResource.resourceHTML()
+						})
+						dataDiv.innerHTML = apiDataHtml
+						break;
 
-				default:
-					console.log('there was no data returned');
-			}
-		})
-	}, 500);
+					case 'activities':
+						data.forEach(item => {
+							let newActivity = new Activity(item)
+							document.getElementById('new-form-div').innerHTML = ''
+							apiDataHtml += newActivity.activityHTML()
+						})
+						dataDiv.innerHTML = apiDataHtml
+						break;
+
+					case 'categories':
+						data.forEach(item => {
+							let newCategory = new Category(item)
+							document.getElementById('new-form-div').innerHTML = ''
+							apiDataHtml += newCategory.categoryHTML()
+						})
+						dataDiv.innerHTML = apiDataHtml
+						listenCategoryResources()
+						break;
+
+					default:
+						console.log('there was no data returned');
+				}
+			})
+		)
 }
 
-function listenForNewFormLinks() {
-	$('tag.api-new-links').on('click', getNewForm)
+function listenToNewFormLinks() {
+	let apiNewLinks = document.querySelectorAll('a.api-new-links')
+	apiNewLinks.forEach(link => {
+		link.addEventListener('click', getNewForm)
+	})
 }
 
 function getNewForm(event) {
 	event.preventDefault()
 	let form = this.id
+	clearDataDiv()
 
 	switch (form) {
 		case 'new-track':
@@ -113,6 +101,7 @@ function getNewForm(event) {
 			newCategoryForm()
 			break;
 		default:
-			console.log('there was no form specified in the request');
+			console.log('there was no form specified in the request, (check this.id) ');
 	}
 }
+

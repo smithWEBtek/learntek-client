@@ -1,4 +1,4 @@
-// console.log('category.js loaded ---');
+
 function getData() {
 	let apiLinks = document.querySelectorAll('a.api-links')
 	apiLinks.forEach(link => {
@@ -11,33 +11,6 @@ class Category {
 		this.name = obj.name
 		this.resources = obj.resources
 	}
-
-	static categoryForm() {
-		return (`
-			<form id='new-category-form'>
-				<label class='subtitle'>New Category</label>
-
-				<!-- name -->
-				<div class="field">
-					<div class="control has-icons-left has-icons-right">
-						<input class="input is-info" type="text" placeholder="name">
-					</div>
-				</div>
-
-				<!-- Submit -->
-				<div class="field is-grouped">
-					<div class="control is-info">
-						<button class="input is-primary">Submit</button>
-					</div>
-
-					<!-- Cancel -->
-					<div class="control">
-						<button class="input is-text is-danger">Cancel</button>
-					</div>	
-				</div>
-			</form>
-		`)
-	}
 }
 
 Category.prototype.categoryHTML = function () {
@@ -46,8 +19,8 @@ Category.prototype.categoryHTML = function () {
 			<h3>${this.name}</h3>
 			<button class='category-resources-buttons' id=${this.id}>show resources</button>
 		</div>
-		<div data-id=${this.id} class='category-resources-div'></div>
-	`)
+		<div data-id=${this.id} class='category-resources-div'></div> 
+		`)
 }
 
 function listenCategoryResources() {
@@ -77,31 +50,37 @@ function showCategoryResources(id) {
 }
 
 function newCategoryForm() {
-	clearApiDataDiv()
-	spinnerNewFormDiv('category')
-
-	let categoryForm = Category.categoryForm()
-	$('#new-form-div').html(categoryForm)
+	let categoryForm = (`
+		<fieldset>
+			<strong>New Category</strong>
+			<form id='new-category-form'>
+				<input id='name' placeholder='category name' /><br>
+				<button type='submit'>Submit Category</button>
+			</form>
+		</fieldset>
+		`)
+	document.getElementById('new-form-div').innerHTML = categoryForm
 	createCategory()
 }
 
 function createCategory() {
-	$('form#new-category-form').on('submit', function (event) {
+	let form = document.querySelector('form#new-category-form')
+	form.addEventListener('submit', function (event) {
 		event.preventDefault()
-
+		let name = event.currentTarget.name.value
 		let category = {
-			name: event.target[0].value
+			name: name
 		}
 
-		fetch(`${baseUrl}categories`, {
+		fetch('http://localhost:3000/api/categories', {
 			method: 'post',
 			headers: {
 				'Accept': 'application/json, text/plain, */*',
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(category)
-		}).then(() => {
-			clearNewFormDiv()
+		}).then(function (response) {
+			document.getElementById('new-form-div').innerHTML = ''
 		});
 	})
 }

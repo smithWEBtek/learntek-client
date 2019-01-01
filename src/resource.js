@@ -1,4 +1,3 @@
-// console.log('resource.js loaded ---');
 
 class Resource {
 	constructor(obj) {
@@ -11,95 +10,56 @@ class Resource {
 		this.start_date = obj.start_date
 		this.goal_date = obj.goal_date
 	}
-
-	static resourceForm(categoryOptions) {
-		return (`
-		<form id='new-resource-form'>
-		<label class='subtitle'>New Resource</label>
-		<div class="field">
-			<div class="control">
-				<div class="select is-info">
-					<select>
-						<option>category</option>
-						${categoryOptions}
-					</select>
-				</div>
-			</div>
-		</div>
-		<div class="field">
-			<div class="control has-icons-left has-icons-right">
-				<input class="input is-info" type="text" placeholder="name">
-			</div>
-		</div>
-		<div class="field">
-			<div class="control has-icons-left has-icons-right">
-				<input class="input is-info" type="text" placeholder="description">
-			</div>
-		</div>
-		<div class="field">
-			<div class="control has-icons-left has-icons-right">
-				<input class="input is-info" type="text" placeholder="format">
-			</div>
-		</div>
-		<div class="field">
-			<div class="control has-icons-left has-icons-right">
-				<input class="input is-info" type="text" placeholder="url">
-			</div>
-		</div>
-		 
-		<div class="field is-grouped">
-			<div class="control is-info">
-				<button class="input is-primary">Submit</button>
-			</div>
-			<div class="control">
-				<button class="input is-text is-danger">Cancel</button>
-			</div>
-		</div>
-		</form>
-	`)
-	}
 }
 
 Resource.prototype.resourceHTML = function () {
 	return (`
-<div>
-	<h3>${this.name}</h3>
-</div>
-`)
+		<div>
+		<h3>${this.name}</h3>
+		</div>
+	`)
 }
 
 function newResourceForm() {
-	clearApiDataDiv()
-	spinnerNewFormDiv('resource')
-	let categoryOptions = ''
+	fetch(baseUrl + 'categories')
+		.then(res => res.json()
+			.then(categories => {
 
-	fetch(baseUrl + 'categories', {
-		method: 'get',
-		headers: {
-			'Accept': 'application/json, text/plain, */*',
-			'Content-Type': 'application/json'
-		}
-	}).then(res => res.json()
-		.then(categories => {
-			categoryOptions = categories.map(category => {
-				return (`<option class="dropdown-item" value=${category.id}>${category.name}</option>`)
+				let categoryOptions = categories.map(category => {
+					return (`<option value=${category.id}>${category.name}</option>`)
+				})
+
+				let resourceForm = (`
+					<fieldset>
+						<strong>New Resource</strong>
+						<form id='new-resource-form'>
+							<input id='name' placeholder='resource name' /><br>
+							<input id='description' placeholder='description'/><br>
+							<input id='url' placeholder='url'/><br>
+							<input id='format' placeholder='format'/><br>
+							<select id="categorySelect"><br>
+							<option>choose category</option>
+								${categoryOptions}
+							</select><br>
+							<button type='submit'>Submit Resource</button>
+						</form>
+					</fieldset>
+				`)
+				document.getElementById('new-form-div').innerHTML = resourceForm
+				createResource()
 			})
-			let form = Resource.resourceForm(categoryOptions)
-			$('#new-form-div').html(form)
-			createResource()
-		})
-	)
+		)
 }
 
 function createResource() {
-	$('form#new-resource-form').on('submit', function (event) {
+	let form = document.querySelector('form#new-resource-form')
+	form.addEventListener('submit', function (event) {
 		event.preventDefault()
-
-		let category_id = event.target[0].value
-		let name = event.target[1].value
-		let description = event.target[2].value
-		let format = event.target[3].value
-		let url = event.target[4].value
+		let name = event.currentTarget.name.value
+		let description = event.currentTarget.description.value
+		let url = event.currentTarget.url.value
+		let format = event.currentTarget.format.value
+		let category_id = event.currentTarget.categorySelect.value
 
 		let resource = {
 			name: name,
@@ -109,15 +69,15 @@ function createResource() {
 			format: format
 		}
 
-		fetch(`${baseUrl}resources`, {
+		fetch('http://localhost:3000/api/resources', {
 			method: 'post',
 			headers: {
 				'Accept': 'application/json, text/plain, */*',
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(resource)
-		}).then(() => {
-			clearNewFormDiv()
+		}).then(function (response) {
+			document.getElementById('new-form-div').innerHTML = ''
 		});
 	})
 }
