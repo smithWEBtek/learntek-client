@@ -1,9 +1,9 @@
-$(() => {
+$(function () {
 	// console.log('index.js loaded ---');
 	listenToDataLinks()
 	listenForNewFormLinks()
-	clearNewFormDiv()
-	clearApiDataDiv()
+	// clearNewFormDiv()
+	// clearApiDataDiv()
 })
 
 const baseUrl = 'https://learntek-api.herokuapp.com/api/'
@@ -42,7 +42,9 @@ function listenToDataLinks() {
 
 function getApiData(event) {
 	event.preventDefault()
-	clearNewFormDiv()
+	// clearNewFormDiv()
+
+
 	let url = this.id
 	let dataDiv = $('div#api-data-div')
 	spinnerApiDataDiv(url)
@@ -53,6 +55,7 @@ function getApiData(event) {
 			method: 'get',
 			dataType: 'json'
 		}).done(function (data) {
+
 			clearApiDataDiv()
 			switch (url) {
 				case 'tracks':
