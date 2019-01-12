@@ -42,7 +42,7 @@ function listenToDataLinks() {
 
 function getApiData(event) {
 	event.preventDefault()
-	// clearNewFormDiv()
+	clearNewFormDiv()
 
 
 	let url = this.id
