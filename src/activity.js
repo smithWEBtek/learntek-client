@@ -60,12 +60,11 @@ class Activity {
 Activity.prototype.activityHTML = function () {
 	return (`
 		<div>
-			<fieldset>
-				<h3>${this.name}</h3>
-				<p>${this.description}</p>
-				<p>status: ${this.status}</p>
-			</fieldset>	
+			<h3>${this.name}</h3>
+			<p>${this.description}</p>
+			<p>status: ${this.status}</p>
 		</div>
+		<br>
 	`)
 }
 

@@ -1,9 +1,6 @@
 $(function () {
-	// console.log('index.js loaded ---');
 	listenToDataLinks()
 	listenForNewFormLinks()
-	// clearNewFormDiv()
-	// clearApiDataDiv()
 })
 
 const baseUrl = 'https://learntek-api.herokuapp.com/api/'
