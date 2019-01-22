@@ -1,4 +1,5 @@
 $(function () {
+	console.log('index.js loaded ...');
 	listenToDataLinks()
 	listenForNewFormLinks()
 })
@@ -56,29 +57,29 @@ function getApiData(event) {
 			clearApiDataDiv()
 			switch (url) {
 				case 'tracks':
-					data.forEach(item => {
-						let newTrack = new Track(item)
+					data.forEach(obj => {
+						let newTrack = new Track(obj)
 						dataDiv.append(newTrack.trackHTML())
 					})
 					break;
 
 				case 'resources':
-					data.forEach(item => {
-						let newResource = new Resource(item)
+					data.forEach(obj => {
+						let newResource = new Resource(obj)
 						dataDiv.append(newResource.resourceHTML())
 					})
 					break;
 
 				case 'activities':
-					data.forEach(item => {
-						let newActivity = new Activity(item)
+					data.forEach(obj => {
+						let newActivity = new Activity(obj)
 						dataDiv.append(newActivity.activityHTML())
 					})
 					break;
 
 				case 'categories':
-					data.forEach(item => {
-						let newCategory = new Category(item)
+					data.forEach(obj => {
+						let newCategory = new Category(obj)
 						dataDiv.append(newCategory.categoryHTML())
 					})
 					listenCategoryResources()

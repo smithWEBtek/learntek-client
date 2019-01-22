@@ -62,9 +62,10 @@ class Resource {
 
 Resource.prototype.resourceHTML = function () {
 	return (`
-<div>
-	<h3>${this.name}</h3>
-</div>
+	<div>
+		<h3>${this.name}</h3>
+		<p>${this.description}</p>
+	</div>
 `)
 }
 
