@@ -4,5 +4,4 @@ WORKDIR /usr/src/learntek-client
 
 COPY ./ ./
 
-
 CMD ["/bin/bash"]
